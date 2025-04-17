@@ -1,0 +1,36 @@
+<div class="sudoku-container">
+  <h1>Sudoku Validator</h1>
+
+  <div class="controls">
+    <button (click)="newGame()" class="btn new-game-btn">New Game</button>
+    <button (click)="checkSudoku()" class="btn check-btn">Check</button>
+    <button (click)="resetBoard()" class="btn reset-btn">Reset</button>
+    <div class="timer">{{ formatTime(timer) }}</div>
+  </div>
+
+  <form [formGroup]="sudokuForm" class="sudoku-form">
+    <div class="sudoku-grid">
+      <div *ngFor="let row of grid.controls; let rowIndex = index" class="sudoku-row">
+        <div *ngFor="let cell of getRowControls(rowIndex); let colIndex = index"
+             class="sudoku-cell"
+             [class.invalid]="isCellInvalid(rowIndex, colIndex)"
+             [class.invalid-subgrid]="isSubgridInvalid(rowIndex, colIndex)">
+          <input type="number"
+                 min="1"
+                 max="9"
+                 [formControl]="cell"
+                 (keypress)="onKeyPress($event)"
+                 class="cell-input">
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <div *ngIf="invalidCells.size > 0" class="error-message">
+    Invalid cells highlighted. Please correct duplicates in rows, columns, or 3x3 subgrids.
+  </div>
+
+  <div class="success-message" *ngIf="successMessage">
+    {{ successMessage }}
+  </div>
+</div>
